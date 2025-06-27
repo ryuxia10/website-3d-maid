@@ -224,7 +224,7 @@ export default function App() {
 
     // PERUBAHAN 2: Logika Panggilan ke API Google AI
     // ===============================================
-    const API_KEY = "AIzaSyCEzpygHXDk8YOsjs4ysrjs5oI4MXy5WzM"; // <-- TEMPEL KUNCI API ANDA DI SINI
+    const API_KEY = import.meta.env.VITE_GEMINI_API_KEY; // <-- TEMPEL KUNCI API ANDA DI SINI
     const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
 
     // Siapkan data yang akan dikirim ke API
