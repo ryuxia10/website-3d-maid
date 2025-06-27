@@ -11,46 +11,60 @@
   box-sizing: border-box;
 }
 
+/* ================================== */
+/* == PENGATURAN DASAR & LAYOUT == */
+/* ================================== */
+
 html, body, #root {
   width: 100%;
   height: 100%;
   margin: 0;
   padding: 0;
-  overflow: hidden; /* Mencegah scroll */
+  overflow: hidden; 
 }
 
 body {
   font-family: 'Poppins', sans-serif;
-  background: linear-gradient(135deg, var(--soft-blue), var(--bg-color));
   color: var(--text-color);
+  background: linear-gradient(135deg, var(--soft-blue), var(--bg-color));
 }
 
-/* Styling untuk Canvas 3D */
-canvas {
-  touch-action: none; /* Performa lebih baik di mobile */
+.main-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.canvas-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   background: transparent;
 }
 
-/* Overlay UI di atas Canvas */
 .ui-container {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  pointer-events: none; /* Agar bisa klik "tembus" ke canvas */
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 50px;
+  pointer-events: none; 
 }
 
-.ui-container > * {
-  pointer-events: all; /* Elemen di dalam UI bisa di-klik */
-}
+/* ================================== */
+/* == HEADER & LOADING == */
+/* ================================== */
 
 .header {
+  position: absolute;
+  top: 15%; 
+  left: 50%;
+  transform: translateX(-50%); 
   text-align: center;
+  pointer-events: all;
+  color: #333;
 }
 
 .header h1 {
@@ -66,24 +80,265 @@ canvas {
   color: var(--text-color);
 }
 
-.footer {
-  text-align: center;
-  font-size: 1rem;
-  padding: 20px;
-  background: rgba(255, 255, 255, 0.5);
-  backdrop-filter: blur(10px);
-  border-radius: 15px;
-  max-width: 500px;
-  margin: 0 auto;
-}
-
-/* Loading indicator */
-.loading-indicator {
+/* Styling untuk Loading Indicator baru */
+.loading-container {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 20px;
+  color: var(--accent-color);
+  font-family: 'Poppins', sans-serif; /* Pastikan font konsisten */
+}
+
+.loading-container p {
+    font-size: 1.2rem;
+    font-weight: 500;
+}
+
+.loading-spinner {
+  width: 60px;
+  height: 60px;
+  border: 5px solid rgba(255, 128, 171, 0.2); /* Border pink soft transparan */
+  border-top-color: var(--accent-color); /* Warna pink terang untuk bagian yang berputar */
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+
+/* ================================== */
+/* == STATUS PANEL (KIRI ATAS) == */
+/* ================================== */
+
+.status-panel-container {
+  position: absolute;
+  top: 30px;
+  left: 30px;
+  width: 280px;
+  background: rgba(30, 30, 47, 0.8);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  color: white;
+  pointer-events: all;
+}
+
+.status-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 15px;
+}
+
+.status-header h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.status-divider {
+  height: 1px;
+  background: rgba(255,255,255,0.1);
+  margin: 15px 0;
+}
+
+.status-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+  margin-bottom: 10px;
+}
+
+.status-item span:first-child {
+  color: rgba(255,255,255,0.6);
+}
+
+.status-light {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+}
+
+.status-light::before {
+  content: '';
+  display: block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  transition: background-color 0.3s;
+}
+
+.status-light.online::before {
+  background-color: #2ecc71;
+}
+
+.status-light.thinking::before {
+  background-color: #f1c40f;
+  animation: pulse 1.5s infinite;
+}
+
+.activity-bar-container {
+  width: 100%;
+  height: 4px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 2px;
+  margin-top: 5px;
+  /* PERUBAHAN: Tambahkan overflow hidden agar gradien tidak bocor */
+  overflow: hidden;
+}
+
+.activity-bar {
   width: 100%;
   height: 100%;
-  font-size: 1.5rem;
-  color: var(--accent-color);
+  /* PERUBAHAN: Gradien diperluas dan dianimasikan */
+  background: linear-gradient(90deg, #ff80ab, #9b59b6, #3498db, #ff80ab);
+  background-size: 300% 100%;
+  animation: move-gradient 4s linear infinite;
+}
+
+/* ================================== */
+/* == CHATBOX (KANAN BAWAH) == */
+/* ================================== */
+
+.chat-ui-container {
+  position: absolute;
+  bottom: 30px;
+  right: 30px;
+  width: 350px;
+  height: 500px;
+  background: rgba(30, 30, 47, 0.8);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  color: white;
+  pointer-events: all;
+}
+
+.chat-history {
+  flex-grow: 1;
+  overflow-y: auto;
+  margin-bottom: 15px;
+  padding-right: 10px; /* Memberi sedikit ruang untuk scrollbar */
+}
+
+.message-wrapper {
+  display: flex;
+  margin-bottom: 10px;
+}
+
+.message-wrapper.user {
+  justify-content: flex-end;
+}
+
+.message-wrapper.ai {
+  justify-content: flex-start;
+}
+
+.message-wrapper p {
+  padding: 10px 15px;
+  border-radius: 18px;
+  max-width: 80%;
+  line-height: 1.4;
+  word-wrap: break-word;
+}
+
+.message-wrapper.user p {
+  background: var(--accent-color);
+  color: white;
+  border-bottom-right-radius: 4px;
+}
+
+.message-wrapper.ai p {
+  background: rgba(255,255,255,0.1);
+  border-bottom-left-radius: 4px;
+}
+
+.chat-input-area {
+  display: flex;
+  gap: 10px;
+}
+
+.chat-input-area textarea {
+  flex-grow: 1;
+  background: rgba(255,255,255,0.1);
+  border: none;
+  border-radius: 10px;
+  padding: 10px;
+  color: white;
+  font-family: 'Poppins', sans-serif;
+  resize: none;
+  height: 50px;
+}
+
+.chat-input-area button {
+  background-color: var(--accent-color);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 0 20px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+.chat-input-area button:hover {
+  background-color: #ff6699;
+}
+
+/* ================================== */
+/* == CUSTOM SCROLLBAR == */
+/* ================================== */
+
+.chat-history::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chat-history::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.chat-history::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+}
+
+.chat-history::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.4);
+}
+
+/* ================================== */
+/* == ANIMASI == */
+/* ================================== */
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(241, 196, 15, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(241, 196, 15, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(241, 196, 15, 0); }
+}
+
+/* PERUBAHAN: Animasi untuk gradien bergerak */
+@keyframes move-gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
